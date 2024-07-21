@@ -16,6 +16,10 @@ const Chat = () => {
     }
   };
 
+  useEffect(() => {
+    scroll();
+  }, [messages]);
+
 
   const renderResponse = () => {
     return (
