@@ -1,10 +1,9 @@
 import { useChat } from "ai/react";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { render } from "react-dom";
 
 const Chat = () => {
-  const { messages, input handleInputChange, handleSubmit } = useChat(
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: "/api/openai",
   });
   const chatContainer = useRef<HTMLDivElement>(null);
@@ -20,30 +19,31 @@ const Chat = () => {
     scroll();
   }, [messages]);
 
-
   const renderResponse = () => {
     return (
       <div className="response">
         {messages.map((m, index) => (
           <div key={m.id} className={`chat-line ${m.role === "user" ? "user-chat" : "ai-chat"}`}>
-            <Image className="avatar" alt="avatar-image" src={m.role === "user" ? "/user.png" : "/ai.png"}></Image>
-            <div style={{width: "100%", marginLeft: "16px"}}>
+            <Image className="avatar" alt="avatar-image" src={m.role === "user" ? "/user.png" : "/ai.png"} width={40} height={40} />
+            <div style={{ width: "100%", marginLeft: "16px" }}>
               <p className="message">{m.content}</p>
-              {index < messages.length-1 && <div className="horizontal-line"></div>
+              {index < messages.length - 1 && <div className="horizontal-line"></div>}
             </div>
-        </div>
+          </div>
+        ))}
       </div>
-    )
+    );
+  };
 
   return (
     <div ref={chatContainer} className="chat">
       {renderResponse()}
       <form onSubmit={handleSubmit} className="mainForm">
-        <imput name="input-field" type="text" placeholder="dummy text"></imput>
-        <button type="submit" className="mainButton"></button>
+        <input name="input-field" type="text" placeholder="dummy text" value={input} onChange={handleInputChange} />
+        <button type="submit" className="mainButton">Send</button>
       </form>
     </div>
   );
-}
+};
 
 export default Chat;
